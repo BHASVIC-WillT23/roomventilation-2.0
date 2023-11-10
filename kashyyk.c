@@ -243,17 +243,17 @@ int checkOut() {
     //check out
 }
 
-int calculateAge(char *dateOfBirth) { //for example  calculateAge(3/12/2003)
 
-    int calculate_age(struct tm dob) {
-        time_t now;
-        time(&now);
-        struct tm* today = localtime(&now);
-    
-     if (today->tm_mon > dob.tm_mon || (today->tm_mon == dob.tm_mon && today->tm_mday >= dob.tm_mday)) {
-         return today->tm_year + 1900 - dob.tm_year;
+
+int calculate_age(struct tm dob) {
+    time_t now;
+    time(&now);
+    struct tm* today = localtime(&now);
+
+    if (today->tm_mon > dob.tm_mon || (today->tm_mon == dob.tm_mon && today->tm_mday >= dob.tm_mday)) {
+     return today->tm_year + 1900 - dob.tm_year;
      } else {
-         return today->tm_year + 1900 - dob.tm_year - 1;
+     return today->tm_year + 1900 - dob.tm_year - 1;
      }
     }
 
@@ -262,7 +262,7 @@ int calculateAge(char *dateOfBirth) { //for example  calculateAge(3/12/2003)
 
 
 
-}
+
 
 int isNameValid(char name[]) {  //returns 0 if string is letters, returns -1 if string has a number in it
     if (strlen(name) <= 150 && strlen(name) > 0) { //if string < 150 and bigger than 0
