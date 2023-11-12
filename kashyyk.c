@@ -382,7 +382,7 @@ int checkIn(int currentGuestNo) {
     printf("\nYour Booking ID is: %s", BookingID);
 
     //check for quit
-    printf("\n(type '!' to quit this booking and re-book or type any to continue.) : ");
+    printf("\n(Type '!' to quit this booking and re-book or type any to continue.) : ");
     scanf("%c", &confirm); //using confirm to check for quitting
     fflush(stdin);
     if (confirm == '!') {
@@ -397,11 +397,45 @@ int checkIn(int currentGuestNo) {
 }
 int bookDinner(int currentGuestNo) {
     //book dinner
-    printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ")
+    printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ");
+    //TABLES[6] = {0, 0, 0, 0, 0, 0}; //another normal array for table availability
+    //                   // [0] = Endor19:00, [1] = Endor21:00, [2] = Naboo19:00, [3] = Naboo21:00
+    //                   // [4] = Tattooine19:00, [5] = Tattooine21:00
+    //                   // 0 = available, 1 = booked         all tables start available
+    if (TABLES[0] == 1) {
+        printf("\nEndor 19:00 Is booked.");
+    } else {
+        printf("\nEndor 19:00 Is Available for booking.");
+    }
+    if (TABLES[1] == 1) {
+        printf("\nEndor 21:00 Is booked.");
+    } else {
+        printf("\nEndor 21:00 Is available for booking.");
+    }
+    if (TABLES[2] == 1) {
+        printf("\nNaboo 19:00 Is booked.");
+    } else {
+        printf("\nNaboo 19:00 Is Available for booking.");
+    }
+    if (TABLES[3] == 1) {
+        printf("\nNaboo 21:00 Is booked.");
+    }
+    else {
+        printf("\nNaboo 21:00 Is Available for booking.");
+    }
+    if (TABLES[4] == 1) {
+        printf("\nTattooine 19:00 Is booked.");
+    } else {
+        printf("\nTattooine 19:00 Is Available for booking.");
+    }
+    if (TABLES[5] == 1) {
+        printf("\nTattooine 21:00 Is booked.");
+    }
+    else {
+        printf("\nTattooine 21:00 Is Available for booking.");
+    }
     //Show tables that aren't booked instead, do loads of if elses and go through array to check if table is booked or not
-do {
 
-}
 }
 int checkOut(int currentGuestNo) {
     //check out
