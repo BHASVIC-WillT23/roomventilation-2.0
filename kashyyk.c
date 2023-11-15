@@ -607,7 +607,7 @@ int checkOut(int currentGuestNo) {
 }
 
 int calculate_age(struct tm dob) {
- // needs to add variables like this with year month date to calculate prtoperly
+    // needs to add variables like this with year month date to calculate prtoperly
 //struct tm dob1 ={0};
 //dob1.tm_year = xxxx;
 //dob1.tm_mon = xx;
@@ -616,15 +616,15 @@ int calculate_age(struct tm dob) {
 
     time_t now;
     time(&now);
-    struct tm* today = localtime(&now);
+    struct tm *today = localtime(&now);
 
-    if (today->tm_mon > dob.tm_mon || (today->tm_mon == dob.tm_mon && today->tm_mday >= dob.tm_mday)){
+    if (today->tm_mon > dob.tm_mon || (today->tm_mon == dob.tm_mon && today->tm_mday >= dob.tm_mday)) {
         return today->tm_year + 1900 - dob.tm_year;
     } else {
-        return today->tm_year +1900 - dob.tm_year - 1;
+        return today->tm_year + 1900 - dob.tm_year - 1;
     }
-
 }
+
 
 int isNameValid(char name[]) {  //returns 0 if string is letters, returns -1 if string has a number in it
     if (strlen(name) <= 150 && strlen(name) > 0) { //if string < 150 and bigger than 0
