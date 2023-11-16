@@ -565,14 +565,14 @@ int checkOut(int currentGuestNo) {
     printf("\nFINAL BILL- \n");
     printf("\t-ROOM RATE- \n\t +£%.2f\n", roomRate);
     if (seniorDiscount > 0) {
-        printf("\t-SENIOR DISCOUNT -£%.2f\n", seniorDiscount);
+        printf("\t -£%.2f (SENIOR DISCOUNT)\n", seniorDiscount);
     }
     printf("\t-BOARD RATE- \n\t +£%.2f\n", totalBoardRateRaw);
     if (childBoardRate > 0) {
-        printf("\t-CHILD DISCOUNT -£%.2f\n", childDiscount);
+        printf("\t -£%.2f (CHILD DISCOUNT)\n", childDiscount);
     }
     if (newspaperBill > 0) {
-        printf("\t-OTHER- \n\t-NEWSPAPER +£%.2f", newspaperBill);
+        printf("\t-OTHER- \n\t +£%.2f (NEWSPAPER)", newspaperBill);
     }
     printf("\nTOTAL- £%.2f", totalBill);
 
