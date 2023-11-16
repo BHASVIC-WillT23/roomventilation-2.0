@@ -196,7 +196,7 @@ int checkIn(int currentGuestNo) {
     do {
         struct tm dob1 = {0};
         do {
-            printf("\n\nPlease enter your year of birth (XXXX):");
+            printf("\n\nPlease enter your year of birth (XXXX): ");
             scanf("%d", &dob1.tm_year);
             fflush(stdin);
             if (dob1.tm_year <= 0 || dob1.tm_year >= 2023) {
@@ -212,7 +212,7 @@ int checkIn(int currentGuestNo) {
             }
         } while(dob1.tm_mon > 12 || dob1.tm_mon <= 0);
         do {
-            printf("\nPlease enter the day you were born:");
+            printf("\nPlease enter the day you were born (e.g 03): ");
             scanf("%d", &dob1.tm_mday);
             fflush(stdin);
             if (dob1.tm_mday <= 0 || dob1.tm_mday > 31) {
@@ -607,7 +607,7 @@ int checkOut(int currentGuestNo) {
 }
 
 int calculate_age(struct tm dob) {
-    // needs to add variables like this with year month date to calculate prtoperly
+    // needs to add variables like this with year month date to calculate properly
 //struct tm dob1 ={0};
 //dob1.tm_year = xxxx;
 //dob1.tm_mon = xx;
