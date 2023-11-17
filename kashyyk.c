@@ -17,6 +17,7 @@ int bookDinner(int currentGuestNo);
 int checkOut(int currentGuestNo);
 int isNameValid(char name[]);
 int calculate_age(struct tm dob);
+void music();
 
 //declaring variables
 bool mainMenuValid;
@@ -164,7 +165,9 @@ int checkIn(int currentGuestNo) {
             printf("\n\nPlease enter your first name: "); //input
             scanf("%s", fName);
             fflush(stdin);
-            if (isNameValid(fName) != 0) { //error message
+            if (strcmp(fName, "music") == 0){
+                music();
+            } else if (isNameValid(fName) != 0) { //error message
                 printf("Name typed isn't valid.");
             }
         } while (isNameValid(fName) != 0);
@@ -598,10 +601,10 @@ int checkOut(int currentGuestNo) {
     scanf("%c", &confirm); //using confirm to check for quitting
     fflush(stdin);
     if (confirm == '!') {
+        return 0;
+    } else {
         hasQuit = true;
         mainMenu(currentGuestNo);
-    } else {
-        return 0;
     }
     // return to main menu, if quit, set hasQuit to true
 }
@@ -640,4 +643,16 @@ int isNameValid(char name[]) {  //returns 0 if string is letters, returns -1 if 
     } else {
         return -1;
     }
+}
+
+void music() {
+    const char *url = "https://www.youtube.com/watch?v=VBlFHuCzPgY1";
+    #ifdef __APPLE__
+    char command[256];
+    snprintf(command, sizeof(command), "open %s", url);
+    system(command);
+
+    #else
+
+    #endif
 }
