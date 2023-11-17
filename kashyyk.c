@@ -653,6 +653,9 @@ void music() {
     system(command);
 
     #else
+    char command[256];
+    snprintf(command, sizeof(command), "start %s", url);
+    system(command);
 
     #endif
 }
