@@ -17,7 +17,7 @@ int bookDinner(int currentGuestNo);
 int checkOut(int currentGuestNo);
 int isNameValid(char name[]);
 int calculate_age(struct tm dob);
-void music();
+void music(int choice);
 
 //declaring variables
 bool mainMenuValid;
@@ -55,7 +55,11 @@ int mainMenuChoice;
 bool mainMenuValid = true;
 
 int mainMenu(int currentGuestNo) {
-    printf("\n\n\n  WELCOME TO THE KASHYYYK HOTEL\n");
+    printf("\n\n\n  WELCOME TO THE KASHYYYK HOTEL");
+    //guest printing
+    if (currentGuestNo != -1 && hasQuit == false) {
+        printf("\t\t (Guest %d)\n", (currentGuestNo+1));
+    } else { printf("\n"); }
     // colourful ribbon because why not \/
     for (int i = 0; i < 33; i++) {
         if (i % 3 == 0) {
@@ -70,7 +74,7 @@ int mainMenu(int currentGuestNo) {
 
     //main menu
     //hasquit is true if the user has returned to the main menu by quitting
-    printf("\n1) Check-In\t\t2) Book Table\t\t3) Check-Out\n");
+    printf("\n1) Check-In\t\t2) Book Table\t\t3) Check-Out\t\t4) Quit\n");
     do {
         mainMenuValid = true; //set to false if their choice didn't make sense
         printf("\nEnter choice: ");
@@ -81,6 +85,7 @@ int mainMenu(int currentGuestNo) {
             if (hasQuit) {
                 if (currentGuestNo == 5) {
                     printf("The Kashyyyk Hotel is fully booked, please visit another time.");
+                    return 0;
                 } else {
                     checkIn(currentGuestNo); //if player has quit, check in with new guest number
                 }
@@ -125,12 +130,24 @@ int mainMenu(int currentGuestNo) {
                 printf("You haven't checked in yet, please Check-In and enter option 1.");
                 mainMenuValid = false;
             }
-        }
-        else {
+        } else if (mainMenuChoice == 4) {
+            if (hasQuit) {
+                printf("You haven't checked in yet, please Check-In and enter option 1.");
+                mainMenuValid = false;
+            } else {
+                if (currentGuestNo == -1) {
+                    printf("You haven't checked in yet, please Check-In and enter option 1.");
+                    mainMenuValid = false;
+                } else {
+                    hasQuit = true;
+                    mainMenu(currentGuestNo);
+                }
+            }
+        } else {
             printf("Option typed is invalid, try again.");
             mainMenuValid = false;
         }
-    } while (mainMenuChoice < 1 || mainMenuChoice > 3 || !mainMenuValid);
+    } while (mainMenuChoice < 1 || mainMenuChoice > 4 || !mainMenuValid);
 
     //check in
 
@@ -166,7 +183,9 @@ int checkIn(int currentGuestNo) {
             scanf("%s", fName);
             fflush(stdin);
             if (strcmp(fName, "music") == 0){
-                music();
+                music(0);
+            } else if (strcmp(fName, "kashyyyk") == 0 || strcmp(fName, "KASHYYYK") == 0) {
+                music(1);
             } else if (isNameValid(fName) != 0) { //error message
                 printf("Name typed isn't valid.");
             }
@@ -423,28 +442,15 @@ int checkIn(int currentGuestNo) {
     sprintf(BookingID, "%s%d", lName, BookingIDRandom);
     printf("\n\nYour Booking ID is: %s", BookingID);
 
-    //check for quit
-<<<<<<< HEAD
-    printf("\n(Type '!' to quit this booking and re-book or type any to continue.) : ");
-=======
-    printf("\n(type '!' to quit this booking and re-book or press enter to continue.) : ");
->>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
-    scanf("%c", &confirm); //using confirm to check for quitting
-    fflush(stdin);
-    if (confirm == '!') {
-        hasQuit = true;
-        mainMenu(currentGuestNo);
-    } else {
-        mainMenu(currentGuestNo);
-    }
+
     // return to main menu, if quit, set hasQuit to true
+    mainMenu(currentGuestNo);
 
     return 0;
 }
 
 int bookDinner(int currentGuestNo) {
     //book dinner
-<<<<<<< HEAD
     printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ");
     //TABLES[6] = {0, 0, 0, 0, 0, 0}; //another normal array for table availability
     //                   // [0] = Endor19:00, [1] = Endor21:00, [2] = Naboo19:00, [3] = Naboo21:00
@@ -483,7 +489,6 @@ int bookDinner(int currentGuestNo) {
         printf("\nTattooine 21:00 Is Available for booking.");
     }
     //Show tables that aren't booked instead, do loads of if elses and go through array to check if table is booked or not
-=======
     //show availablity
     //ask for table (validation)
     //store table
@@ -549,26 +554,14 @@ int bookDinner(int currentGuestNo) {
     MAIN[10][currentGuestNo] = 1; //hasbookedtable is true
     MAIN[9][currentGuestNo] = tableChoice - 1;
     TABLES[tableChoice - 1] = 1;
->>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
 
     //check for quit
-    printf("\n(type '!' to quit this booking and re-book or press enter to continue.) : ");
-    scanf("%c", &confirm); //using confirm to check for quitting
-    fflush(stdin);
-    if (confirm == '!') {
-        hasQuit = true;
-        mainMenu(currentGuestNo);
-    } else {
-        mainMenu(currentGuestNo);
-    }
+    mainMenu(currentGuestNo);
     // return to main menu, if quit, set hasQuit to true
 
     return 0;
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
 int checkOut(int currentGuestNo) {
     //CHECK OUT
 
@@ -645,7 +638,7 @@ int checkOut(int currentGuestNo) {
 
     //new guest
     char confirm;
-    printf("\n(type '!' to re-book or press enter to exit.) : ");
+    printf("\n(type '!' to exit or press enter to re-book.) : ");
     scanf("%c", &confirm); //using confirm to check for quitting
     fflush(stdin);
     if (confirm == '!') {
@@ -693,16 +686,27 @@ int isNameValid(char name[]) {  //returns 0 if string is letters, returns -1 if 
     }
 }
 
-void music() {
+void music(int choice) {
+    // 0 = music (elevator), 1 = kashyyyk (cantina music)
     const char *url = "https://www.youtube.com/watch?v=VBlFHuCzPgY1";
+    const char *url2 = "https://www.youtube.com/watch?v=eMffCtOeigI";
+
     #ifdef __APPLE__
     char command[256];
-    snprintf(command, sizeof(command), "open %s", url);
+    if (choice == 0) {
+        snprintf(command, sizeof(command), "open %s", url);
+    } else {
+        snprintf(command, sizeof(command), "open %s", url2);
+    }
     system(command);
 
     #else
     char command[256];
-    snprintf(command, sizeof(command), "start %s", url);
+    if (choice == 0) {
+        snprintf(command, sizeof(command), "start %s", url);
+    } else {
+        snprintf(command, sizeof(command), "start %s", url2);
+    }
     system(command);
 
     #endif
