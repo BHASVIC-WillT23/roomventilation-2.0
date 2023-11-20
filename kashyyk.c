@@ -424,11 +424,7 @@ int checkIn(int currentGuestNo) {
     printf("\n\nYour Booking ID is: %s", BookingID);
 
     //check for quit
-<<<<<<< HEAD
     printf("\n(Type '!' to quit this booking and re-book or type any to continue.) : ");
-=======
-    printf("\n(type '!' to quit this booking and re-book or press enter to continue.) : ");
->>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
     scanf("%c", &confirm); //using confirm to check for quitting
     fflush(stdin);
     if (confirm == '!') {
@@ -444,7 +440,7 @@ int checkIn(int currentGuestNo) {
 
 int bookDinner(int currentGuestNo) {
     //book dinner
-<<<<<<< HEAD
+
     printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ");
     //TABLES[6] = {0, 0, 0, 0, 0, 0}; //another normal array for table availability
     //                   // [0] = Endor19:00, [1] = Endor21:00, [2] = Naboo19:00, [3] = Naboo21:00
@@ -483,7 +479,7 @@ int bookDinner(int currentGuestNo) {
         printf("\nTattooine 21:00 Is Available for booking.");
     }
     //Show tables that aren't booked instead, do loads of if elses and go through array to check if table is booked or not
-=======
+
     //show availablity
     //ask for table (validation)
     //store table
@@ -549,13 +545,12 @@ int bookDinner(int currentGuestNo) {
     MAIN[10][currentGuestNo] = 1; //hasbookedtable is true
     MAIN[9][currentGuestNo] = tableChoice - 1;
     TABLES[tableChoice - 1] = 1;
->>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
-
     //check for quit
-    printf("\n(type '!' to quit this booking and re-book or press enter to continue.) : ");
-    scanf("%c", &confirm); //using confirm to check for quitting
+    char quitconfirm;
+    printf("\n(Type '!' to quit this booking and re-book or press enter to continue.) : ");
+    scanf("%c", &quitconfirm); //using confirm to check for quitting
     fflush(stdin);
-    if (confirm == '!') {
+    if (quitconfirm == '!') {
         hasQuit = true;
         mainMenu(currentGuestNo);
     } else {
@@ -565,10 +560,6 @@ int bookDinner(int currentGuestNo) {
 
     return 0;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
 int checkOut(int currentGuestNo) {
     //CHECK OUT
 
