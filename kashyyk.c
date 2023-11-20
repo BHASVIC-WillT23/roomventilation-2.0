@@ -16,14 +16,16 @@ int checkIn(int currentGuestNo);
 int bookDinner(int currentGuestNo);
 int checkOut(int currentGuestNo);
 int isNameValid(char name[]);
+int calculate_age(struct tm dob);
+void music();
 
 //declaring variables
 bool mainMenuValid;
 
 //global variables
-int MAIN[12][6] = {{0, 0}, {0,0}, {0,0}, {0,0},
+int MAIN[12][6] = {{0,0},{0,0},{0,0},{0,0},
                    {0,0},{0,0},{0,0},{0,0},
-                   {0,0},{0,0},{0,0}, {0, 0}};  //empty 2Darray of 11x2
+                   {0,0},{0,0},{0,0},{0,0}};  //empty 2Darray of 11x2
                    // [0] = BookingID, [1] = FirstName, [2] = Surname, [3] = AdultsStaying, [4] = ChildrenStaying,
                    // [5] = BoardType, [6] = LengthOfStay, [7] = DailyNewspaper, [8] = RoomBooking, [9] = TableBooking
                    // [10] = hasBookedTable, [11] = age
@@ -44,6 +46,8 @@ int main() {
     mainMenuValid = true;
 
     mainMenu(currentGuestNo);
+
+    return 0;
 }
 
 
@@ -73,9 +77,13 @@ int mainMenu(int currentGuestNo) {
         scanf("%d", &mainMenuChoice);
         fflush(stdin);
 
-        if (mainMenuChoice == 1) {
+        if (mainMenuChoice == 1) { //CHECK IN
             if (hasQuit) {
-                checkIn(currentGuestNo); // if player has quit, check-in with new guest number
+                if (currentGuestNo == 5) {
+                    printf("The Kashyyyk Hotel is fully booked, please visit another time.");
+                } else {
+                    checkIn(currentGuestNo); //if player has quit, check in with new guest number
+                }
             } else {
                 if (currentGuestNo == -1) {
                     checkIn(currentGuestNo);   //allow check-in if program first started
@@ -85,20 +93,27 @@ int mainMenu(int currentGuestNo) {
                 }
             }
         }
-        else if (mainMenuChoice == 2) {
+        else if (mainMenuChoice == 2) //BOOK DINNER
             if (!hasQuit) {
                 if (currentGuestNo == -1) { //if program has just started
                     printf("You haven't checked in yet, please Check-In and enter option 1.");
                     mainMenuValid = false;
                 } else {
-                    bookDinner(currentGuestNo); //if player hasn't quit (has checked in) go ahead
+                    if (MAIN[5][currentGuestNo] == 3) {
+                        printf("You have only payed for Bed & Breakfast, which does not include our dinner services.");
+                        mainMenuValid = false;
+                    } else if (MAIN[10][currentGuestNo] == 1){
+                        printf("You have already booked a dinner table, try again");
+                        mainMenuValid = false;
+                    } else {
+                        bookDinner(currentGuestNo); //if player hasn't quit (has checked in) go ahead
+                    }
                 }
             } else {
                 printf("You haven't checked in yet, please Check-In and enter option 1.");
                 mainMenuValid = false;
             }
-        }
-        else if (mainMenuChoice == 3) {
+        else if (mainMenuChoice == 3) { //CHECK OUT
             if (!hasQuit) {
                 if (currentGuestNo == -1) { //if program has just started
                     printf("You haven't checked in yet, please Check-In and enter option 1.");
@@ -140,6 +155,7 @@ int checkIn(int currentGuestNo) {
     //variables
     currentGuestNo++; //first check in guest column = 0
     char confirm;
+    hasQuit = false;
 
     // INPUTS (+ validation)
     //first name
@@ -149,14 +165,16 @@ int checkIn(int currentGuestNo) {
             printf("\n\nPlease enter your first name: "); //input
             scanf("%s", fName);
             fflush(stdin);
-            if (isNameValid(fName) != 0) { //error message
+            if (strcmp(fName, "music") == 0){
+                music();
+            } else if (isNameValid(fName) != 0) { //error message
                 printf("Name typed isn't valid.");
             }
         } while (isNameValid(fName) != 0);
 
         //last name
         do {
-            printf("\n\nPlease enter your last name: ");
+            printf("\nPlease enter your last name: ");
             scanf("%s", lName);
             fflush(stdin);
             if (isNameValid(lName) != 0) { //error message
@@ -168,6 +186,7 @@ int checkIn(int currentGuestNo) {
         printf("\nYour name is: %s %s, type '/' to proceed: ", fName, lName);
         scanf("%c", &confirm);
         fflush(stdin);
+
         if (confirm == '/') {
             printf("Thank you for your booking");
         } else {
@@ -178,9 +197,32 @@ int checkIn(int currentGuestNo) {
 
     //age
     do {
-        printf("\n\nEnter your age: ");
-        scanf("%d", &userAge);
-        fflush(stdin);
+        struct tm dob1 = {0};
+        do {
+            printf("\n\nPlease enter your year of birth (XXXX): ");
+            scanf("%d", &dob1.tm_year);
+            fflush(stdin);
+            if (dob1.tm_year <= 0 || dob1.tm_year >= 2023) {
+                printf("Invalid year, try again");
+            }
+        } while (dob1.tm_year <= 0 || dob1.tm_year >= 2023);
+        do {
+            printf("\nPlease enter your birth month (01-12): ");
+            scanf("%d", &dob1.tm_mon);
+            fflush(stdin);
+            if (dob1.tm_mon > 12 || dob1.tm_mon <= 0) {
+                printf("Invalid month, try again");
+            }
+        } while(dob1.tm_mon > 12 || dob1.tm_mon <= 0);
+        do {
+            printf("\nPlease enter the day you were born (e.g 03): ");
+            scanf("%d", &dob1.tm_mday);
+            fflush(stdin);
+            if (dob1.tm_mday <= 0 || dob1.tm_mday > 31) {
+                printf("Invalid date, try again");
+            }
+        } while (dob1.tm_mday <= 0 || dob1.tm_mday > 31);
+        userAge = calculate_age(dob1);
         if (userAge < 16) {
             printf("You are too young to book, try again.");
         } else if (userAge > 123) {
@@ -379,10 +421,14 @@ int checkIn(int currentGuestNo) {
     srand(time(NULL));
     int BookingIDRandom = rand() % 100;
     sprintf(BookingID, "%s%d", lName, BookingIDRandom);
-    printf("\nYour Booking ID is: %s", BookingID);
+    printf("\n\nYour Booking ID is: %s", BookingID);
 
     //check for quit
+<<<<<<< HEAD
     printf("\n(Type '!' to quit this booking and re-book or type any to continue.) : ");
+=======
+    printf("\n(type '!' to quit this booking and re-book or press enter to continue.) : ");
+>>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
     scanf("%c", &confirm); //using confirm to check for quitting
     fflush(stdin);
     if (confirm == '!') {
@@ -395,8 +441,10 @@ int checkIn(int currentGuestNo) {
 
     return 0;
 }
+
 int bookDinner(int currentGuestNo) {
     //book dinner
+<<<<<<< HEAD
     printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ");
     //TABLES[6] = {0, 0, 0, 0, 0, 0}; //another normal array for table availability
     //                   // [0] = Endor19:00, [1] = Endor21:00, [2] = Naboo19:00, [3] = Naboo21:00
@@ -435,15 +483,199 @@ int bookDinner(int currentGuestNo) {
         printf("\nTattooine 21:00 Is Available for booking.");
     }
     //Show tables that aren't booked instead, do loads of if elses and go through array to check if table is booked or not
+=======
+    //show availablity
+    //ask for table (validation)
+    //store table
+    char confirm;
+    int tableSum;
+    int tableChoice = 0;
+    int tableInvalid = 0;
+    tableSum = TABLES[0] + TABLES[1] + TABLES[2] + TABLES[3] + TABLES[4] + TABLES[5];
+    do {
+        printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ");
+        if (tableSum == 6) {
+            printf("\nAll tables are currently booked");
+            hasQuit = true;
+        } else {
+            tableInvalid = 0;
+            if (TABLES[0] == 1) {
+                printf("\n1. Endor 19:00 is booked.");
+            } else {
+                printf("\n1. Endor 19:00 is available for booking.");
+            }
+            if (TABLES[1] == 1) {
+                printf("\n2. Endor 21:00 is booked.");
+            } else {
+                printf("\n2. Endor 21:00 is available for booking.");
+            }
+            if (TABLES[2] == 1) {
+                printf("\n3. Naboo 19:00 is booked.");
+            } else {
+                printf("\n3. Naboo 19:00 is available for booking.");
+            }
+            if (TABLES[3] == 1) {
+                printf("\n4. Naboo 21:00 is booked.");
+            } else {
+                printf("\n4. Naboo 21:00 is available for booking.");
+            }
+            if (TABLES[4] == 1) {
+                printf("\n5. Tattooine 19:00 is booked.");
+            } else {
+                printf("\n5. Tattooine 19:00 is available for booking.");
+            }
+            if (TABLES[5] == 1) {
+                printf("\n6. Tattooine 21:00 is booked.");
+            } else {
+                printf("\n6. Tattooine 21:00 is available for booking.");
+            }
+            printf("\n\nPlease make your choice of table:");
+            scanf("%d", &tableChoice);
+            fflush(stdin);
+            if (tableChoice > 6 || tableChoice <= 0) {
+                printf("This is not a valid table choice, please try again.");
+            }
+            else if (TABLES[tableChoice - 1] == 1) {
+                printf("Sorry, this table is already booked.");
+                tableInvalid = 1;
+            }
+            else {
+                printf("You are booking for table %d, please type '/' to confirm:", tableChoice);
+                scanf("%c", &confirm);
+                fflush(stdin);
+            }
+        }
+    } while (confirm != '/' || tableChoice > 6 || tableChoice <= 0 || tableInvalid == 1 );
+    MAIN[10][currentGuestNo] = 1; //hasbookedtable is true
+    MAIN[9][currentGuestNo] = tableChoice - 1;
+    TABLES[tableChoice - 1] = 1;
+>>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
 
+    //check for quit
+    printf("\n(type '!' to quit this booking and re-book or press enter to continue.) : ");
+    scanf("%c", &confirm); //using confirm to check for quitting
+    fflush(stdin);
+    if (confirm == '!') {
+        hasQuit = true;
+        mainMenu(currentGuestNo);
+    } else {
+        mainMenu(currentGuestNo);
+    }
+    // return to main menu, if quit, set hasQuit to true
+
+    return 0;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2aa9ab7a5da4156076b7911a780c1f303b4844d7
 int checkOut(int currentGuestNo) {
-    //check out
+    //CHECK OUT
+
+    //room rate per day
+    float roomPrice = MAIN[8][currentGuestNo] == 1 || MAIN[8][currentGuestNo] == 2 ? 100 : MAIN[8][currentGuestNo] == 3 ? 85
+            : MAIN[8][currentGuestNo] == 4 || MAIN[8][currentGuestNo] == 5 ? 75 : 50;
+    float roomRate = roomPrice * MAIN[6][currentGuestNo];
+    roomRate = roundf(roomRate * 100) / 100;
+
+    //senior discount (10% off room rate)
+    float seniorDiscount = 0;
+    if (MAIN[11][currentGuestNo] > 65) {
+        seniorDiscount = roomRate * 0.1;
+    }
+    seniorDiscount = roundf(seniorDiscount * 100) / 100;
+
+    //board rate per day (adults)
+    float boardPrice = MAIN[5][currentGuestNo] == 3 ? 5 : MAIN[5][currentGuestNo] == 2 ? 15 : 20;
+    float adultBoardRate = boardPrice * MAIN[3][currentGuestNo];
+    adultBoardRate = roundf(adultBoardRate * 100) / 100;
+
+    //board rate per day (kids)
+    float childBoardRateRaw = boardPrice * MAIN[4][currentGuestNo];
+    float childBoardRate = boardPrice * MAIN[4][currentGuestNo] * 0.5;
+    childBoardRate = roundf(childBoardRate * 100) / 100;
+    float childDiscount = childBoardRateRaw - childBoardRate;
+    childDiscount = roundf(childDiscount * 100) / 100;
+
+    float totalBoardRateRaw = adultBoardRate + childBoardRateRaw;
+
+    //daily newspaper
+    float newspaperBill = 0;
+    if (MAIN[7][currentGuestNo] == 1) {
+        newspaperBill = 5.50;
+    }
+    newspaperBill = roundf(newspaperBill * 100) / 100;
+
+    //overall
+    float totalBill = (roomRate - seniorDiscount) + adultBoardRate + childBoardRate + newspaperBill;
+    totalBill = roundf(totalBill * 100) / 100;
+
+    //print
+    printf("Here is your total -"); printf("\033[0;31m"); printf("%s %s", fName, lName); printf("\033[0m");
+    printf("- (%s)", BookingID);
+    printf("\nFINAL BILL- \n");
+    printf("\t-ROOM RATE- \n\t +£%.2f\n", roomRate);
+    if (seniorDiscount > 0) {
+        printf("\t -£%.2f (SENIOR DISCOUNT)\n", seniorDiscount);
+    }
+    printf("\t-BOARD RATE- \n\t +£%.2f\n", totalBoardRateRaw);
+    if (childBoardRate > 0) {
+        printf("\t -£%.2f (CHILD DISCOUNT)\n", childDiscount);
+    }
+    if (newspaperBill > 0) {
+        printf("\t-OTHER- \n\t +£%.2f (NEWSPAPER)", newspaperBill);
+    }
+    printf("\nTOTAL- £%.2f", totalBill);
+
+
+    //free room
+    int room = MAIN[8][currentGuestNo];
+    ROOMS[room] = 0;
+    //free table if booked table
+    if (MAIN[10][currentGuestNo] == 1) {
+        int tableChoice = MAIN[9][currentGuestNo];
+        TABLES[tableChoice] = 0;
+    }
+    //clear currentguestno array data
+    for (int i = 0; i < 12; i++) {
+        MAIN[i][currentGuestNo] = 0;
+    }
+    //clear currentguestno
+    currentGuestNo--;
+
+    //new guest
+    char confirm;
+    printf("\n(type '!' to re-book or press enter to exit.) : ");
+    scanf("%c", &confirm); //using confirm to check for quitting
+    fflush(stdin);
+    if (confirm == '!') {
+        return 0;
+    } else {
+        hasQuit = true;
+        mainMenu(currentGuestNo);
+    }
+    // return to main menu, if quit, set hasQuit to true
 }
 
-int calculateAge(char *dateOfBirth) { //for example  calculateAge(3/12/2003)
+int calculate_age(struct tm dob) {
+    // needs to add variables like this with year month date to calculate properly
+//struct tm dob1 ={0};
+//dob1.tm_year = xxxx;
+//dob1.tm_mon = xx;
+//dob1.tm_mday = xx;
 
+
+    time_t now;
+    time(&now);
+    struct tm *today = localtime(&now);
+
+    if (today->tm_mon > dob.tm_mon || (today->tm_mon == dob.tm_mon && today->tm_mday >= dob.tm_mday)) {
+        return today->tm_year + 1900 - dob.tm_year;
+    } else {
+        return today->tm_year + 1900 - dob.tm_year - 1;
+    }
 }
+
 
 int isNameValid(char name[]) {  //returns 0 if string is letters, returns -1 if string has a number in it
     if (strlen(name) <= 150 && strlen(name) > 0) { //if string < 150 and bigger than 0
@@ -459,4 +691,19 @@ int isNameValid(char name[]) {  //returns 0 if string is letters, returns -1 if 
     } else {
         return -1;
     }
+}
+
+void music() {
+    const char *url = "https://www.youtube.com/watch?v=VBlFHuCzPgY1";
+    #ifdef __APPLE__
+    char command[256];
+    snprintf(command, sizeof(command), "open %s", url);
+    system(command);
+
+    #else
+    char command[256];
+    snprintf(command, sizeof(command), "start %s", url);
+    system(command);
+
+    #endif
 }
