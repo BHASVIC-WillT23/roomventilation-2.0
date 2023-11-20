@@ -442,7 +442,6 @@ int checkIn(int currentGuestNo) {
     sprintf(BookingID, "%s%d", lName, BookingIDRandom);
     printf("\n\nYour Booking ID is: %s", BookingID);
 
-
     // return to main menu, if quit, set hasQuit to true
     mainMenu(currentGuestNo);
 
@@ -451,6 +450,7 @@ int checkIn(int currentGuestNo) {
 
 int bookDinner(int currentGuestNo) {
     //book dinner
+
     printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ");
     //TABLES[6] = {0, 0, 0, 0, 0, 0}; //another normal array for table availability
     //                   // [0] = Endor19:00, [1] = Endor21:00, [2] = Naboo19:00, [3] = Naboo21:00
@@ -489,6 +489,7 @@ int bookDinner(int currentGuestNo) {
         printf("\nTattooine 21:00 Is Available for booking.");
     }
     //Show tables that aren't booked instead, do loads of if elses and go through array to check if table is booked or not
+
     //show availablity
     //ask for table (validation)
     //store table
