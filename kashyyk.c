@@ -215,6 +215,7 @@ int checkIn(int currentGuestNo) {
     } while (confirm != '/'); //redo if name is mistyped
 
     //age
+    bool dateValid = true;
     do {
         struct tm dob1 = {0};
         do {
@@ -234,13 +235,17 @@ int checkIn(int currentGuestNo) {
             }
         } while(dob1.tm_mon > 12 || dob1.tm_mon <= 0);
         do {
+            dateValid = true;
             printf("\nPlease enter the day you were born (e.g 03): ");
             scanf("%d", &dob1.tm_mday);
             fflush(stdin);
             if (dob1.tm_mday <= 0 || dob1.tm_mday > 31) {
                 printf("Invalid date, try again");
             }
-        } while (dob1.tm_mday <= 0 || dob1.tm_mday > 31);
+            if (dob1.tm_mon == 2 && dob1.tm_mday >= 29) { dateValid = false;} //february days
+            if (dob1.tm_mon == 4 || dob1.tm_mon == 6 || dob1.tm_mon == 9 || dob1.tm_mon == 11) { dateValid = false; } //invalid 31st days
+            if (dob1.tm_year % 4 == 0 && dob1.tm_mon == 2 && dob1.tm_mday == 29) { dateValid = true;} //leap years
+        } while (dob1.tm_mday <= 0 || dob1.tm_mday > 31 || dateValid == false);
         userAge = calculate_age(dob1);
         if (userAge < 16) {
             printf("You are too young to book, try again.");
