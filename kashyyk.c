@@ -50,7 +50,8 @@ int main() {
     return 0;
 }
 
-
+bool BookingIDValid = true;
+char BookingIDGuess[150];
 int mainMenuChoice;
 bool mainMenuValid = true;
 
@@ -74,7 +75,7 @@ int mainMenu(int currentGuestNo) {
 
     //main menu
     //hasquit is true if the user has returned to the main menu by quitting
-    printf("\n1) Check-In\t\t2) Book Table\t\t3) Check-Out\t\t4) Quit\n");
+    printf("\n1) Check-In\t\t2) Book Table\t\t3) Check-Out\t\t4) Log-Out\t\t5) Quit\n");
     do {
         mainMenuValid = true; //set to false if their choice didn't make sense
         printf("\nEnter choice: ");
@@ -87,6 +88,11 @@ int mainMenu(int currentGuestNo) {
                     printf("The Kashyyyk Hotel is fully booked, please visit another time.");
                     return 0;
                 } else {
+                    printf("\nEnter your Booking ID: ");
+                    scanf("%s", BookingIDGuess);
+                    fflush(stdin);
+                    for (int i = 0; i < 6; i++) {
+                    }
                     checkIn(currentGuestNo); //if player has quit, check in with new guest number
                 }
             } else {
@@ -124,6 +130,7 @@ int mainMenu(int currentGuestNo) {
                     printf("You haven't checked in yet, please Check-In and enter option 1.");
                     mainMenuValid = false;
                 } else {
+
                     checkOut(currentGuestNo); //if player hasn't quit (has checked in) you may check-out
                 }
             } else {
@@ -143,11 +150,13 @@ int mainMenu(int currentGuestNo) {
                     mainMenu(currentGuestNo);
                 }
             }
+        } else if (mainMenuChoice == 5) {
+                return 0;
         } else {
             printf("Option typed is invalid, try again.");
             mainMenuValid = false;
         }
-    } while (mainMenuChoice < 1 || mainMenuChoice > 4 || !mainMenuValid);
+    } while (mainMenuChoice < 1 || mainMenuChoice > 5 || !mainMenuValid);
 
     //check in
 
@@ -455,15 +464,6 @@ int checkIn(int currentGuestNo) {
 
 int bookDinner(int currentGuestNo) {
     //book dinner
-    char bookingIDGuess[150];
-    do {
-        printf("\nEnter your Booking ID: ");
-        scanf("%s", bookingIDGuess);
-        fflush(stdin);
-        if (strcmp(bookingIDGuess, BookingID) != 0) {
-            printf("Incorrect ID, try again.");
-        }
-    } while (strcmp(bookingIDGuess, BookingID) != 0);
 
     printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ");
     //TABLES[6] = {0, 0, 0, 0, 0, 0}; //another normal array for table availability
