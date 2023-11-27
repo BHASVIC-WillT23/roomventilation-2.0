@@ -391,7 +391,7 @@ int checkIn(int currentGuestNo) {
     //we don't need roomConfirm, instead use the global confirm variable
     //available rooms weren't printing, there was an error
     // moved RoomChoice to top
-    printf("\n\nRATES PER DAY- \nRooms 1 & 2- £100\tRoom 3- £85\tRooms 4 & 5- £75\tRoom 6- £50\n"); //print prices
+    printf("\n\nRATES PER DAY- \nRooms 1 & 2- GBP 100\tRoom 3- GBP 85\tRooms 4 & 5- GBP 75\tRoom 6- GBP 50\n"); //print prices
     for (int i = 1; i < 7; i++) {
         if (ROOMS[i] == 0) {      //printing what rooms are available
             printf("Room %d is available. \t", i);
@@ -455,6 +455,15 @@ int checkIn(int currentGuestNo) {
 
 int bookDinner(int currentGuestNo) {
     //book dinner
+    char bookingIDGuess[150];
+    do {
+        printf("\nEnter your Booking ID: ");
+        scanf("%s", bookingIDGuess);
+        fflush(stdin);
+        if (strcmp(bookingIDGuess, BookingID) != 0) {
+            printf("Incorrect ID, try again.");
+        }
+    } while (strcmp(bookingIDGuess, BookingID) != 0);
 
     printf("\n\nThe Kashyyk hotel has 3 dining tables: Endor, Naboo and Tatooine.\nEach table has two available bookings, at 7pm and 9pm.\nHere are the available times: ");
     //TABLES[6] = {0, 0, 0, 0, 0, 0}; //another normal array for table availability
@@ -613,18 +622,18 @@ int checkOut(int currentGuestNo) {
     printf("Here is your total -"); printf("\033[0;31m"); printf("%s %s", fName, lName); printf("\033[0m");
     printf("- (%s)", BookingID);
     printf("\nFINAL BILL- \n");
-    printf("\t-ROOM RATE- \n\t +£%.2f\n", roomRate);
+    printf("\t-ROOM RATE- \n\t +GBP %.2f\n", roomRate);
     if (seniorDiscount > 0) {
-        printf("\t -£%.2f (SENIOR DISCOUNT)\n", seniorDiscount);
+        printf("\t -GBP %.2f (SENIOR DISCOUNT)\n", seniorDiscount);
     }
-    printf("\t-BOARD RATE- \n\t +£%.2f\n", totalBoardRateRaw);
+    printf("\t-BOARD RATE- \n\t +GBP %.2f\n", totalBoardRateRaw);
     if (childBoardRate > 0) {
-        printf("\t -£%.2f (CHILD DISCOUNT)\n", childDiscount);
+        printf("\t -GBP %.2f (CHILD DISCOUNT)\n", childDiscount);
     }
     if (newspaperBill > 0) {
-        printf("\t-OTHER- \n\t +£%.2f (NEWSPAPER)", newspaperBill);
+        printf("\t-OTHER- \n\t +GBP %.2f (NEWSPAPER)", newspaperBill);
     }
-    printf("\nTOTAL- £%.2f", totalBill);
+    printf("\nTOTAL- GBP %.2f", totalBill);
 
 
     //free room
